@@ -86,6 +86,33 @@ const app = new Vue({
     }
 })
 
+// Компоненты товаров
+Vue.component('goods-list', {
+    props: ['goods'],
+    template: '<section class="goods-list"><slot name="title"></slot><goods-item v-for="good in goods" :key="good.id" :good="good"></goods-item><slot name="nothing"></section>'
+})
+Vue.component('goods-item', {
+    props: ['good'],
+    template: '<div class="goods-item"><img :src="good.img" :alt="good.title"><h3>{{good.title}}</h3><p>{{good.price}}</p><button :id="good.id" v-on:click="addBasket(event)">Добавить</button></div>'
+})
+// Компоненты корзины
+Vue.component('basket-list', {
+    props: ['goods'],
+    template: '<aside class="basket-list"><slot name="title"></slot><basket-item v-for="good in goods" :key="good.id" :good="good"></basket-item><slot name="totalCart"></slot></aside>'
+})
+Vue.component('basket-item', {
+    props: ['good'],
+    template: '<div class="basket-item"><img :src="good.img" :alt="good.title"><button :id="good.id" v-on:click="deleteItem(event)">&times;</button><div class="basket-item-info"><h3>{{good.title}}</h3><p>{{good.price}}</p></div></div>'
+})
+// Компоненты товаров
+Vue.component('search', {
+    props: [],
+    template: '<div class="search"><input type="search" v-on:keydown.enter="filterGoods" v-model="app.searchLine" placeholder="Type and press enter"></div>'
+});
+
+function filterGoods() {
+    app.filterGoods();
+}
 function addBasket(event) {
     app.addToBasket(event.target.id);
 }
