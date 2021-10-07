@@ -1,54 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/style.css">
-    <title>Form Validation</title>
+    <title>eShop</title>
+    <link rel="stylesheet" href="../dist/css/stylevue.css">
+    <script defer src="vue.min.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
-    <body> 
-        <div class="form-box" >
-            <h1 style="text-align: center"> Форма обратной связи </h1>		 
-            <form name="regform" onsubmit="return formValidation(event)">
-            <h2 id="form-box__area__headline"></h2>
-                <p >Имя: 
-                    <input type="text" size=65 name="name" class="form-box__area"></p><br>
-                    <span class="error-text form-box__area"></span>	 
-                <p>E-mail: 
-                    <input type="text" size=65 name="email" class="form-box__area"> </p><br> 
-                    <span class="error-text form-box__area"></span>	
-                <p>Телефон: 
-                    <input type="text" size=65 name="telephone" onclick="this.value=''" value="+7(000)000-0000" class="form-box__area"> </p><br>
-                    <span class="error-text form-box__area"></span>	
-                <p> Комментарий: 
-                    <textarea cols="55" name="comment" class="form-box__area"> </textarea></p> 
-                <p>
-                    <input type="submit" value="Отправить" name="submitButton">
-                </p>		 
-            </form> 
-            
-        </div>
-        <button id="next-ex" onclick="openNextEx()">Задание 1 и 2 из ДЗ откроется при нажатии ></button>
-        <br>
-        <div class="box-next-ex">
-            <span id="text-box__before-text">
-                'Одинарные ковычки нужно заменить на двойные'
-                кроме don't isn't doesn't didn't
-                'Одинарные ковычки нужно заменить на двойные'
-                кроме don't isn't doesn't didn't
-                'Одинарные ковычки нужно заменить на двойные'
-                кроме don't isn't doesn't didn't
-            </span>
-            <br>
-            <button id="btn-change-text" onclick="changeText()"> Изменить ' на " </button>
-            <br>
-            <span id="text-box__after-text"></span>  
-        </div>
-        
+    <div id="app">
+        <header>
+            <div class="container">
+                <div class="search">
+                    <input type="search" v-on:keydown.enter="filterGoods()" v-model="searchLine" placeholder="Type and press enter">
+                    <!--<button v-on:click="filterGoods()">Поиск</button>-->
+                </div>
+                <button class="cart-button" v-bind:class="{ activebutton: isVisibleCart }" v-on:click="viewCart()">Корзина<span>{{totalPriceCoin}}</span></button>
+            </div>
+        </header>
+        <main class="container">
+            <section class="goods-list">
+                <h2>Товары в продаже</h2>
+                <template v-for="good in filteredGoods">
+                <div class="goods-item">
+                    <img :src="good.img" :alt="good.title">
+                    <h3>{{good.title}}</h3>
+                    <p>{{good.price}}</p>
+                    <button :id="good.id" v-on:click="addBasket(event)">Добавить</button>
+                </div>
+                </template>
 
-    <script src="script_1.js"></script>
-    <script src="script_2.js"></script>
+                <template v-if="filteredGoods.length == 0">
+                    <h3 class="goods-null">Нет данных / Товары не найдены</h3>
+                </template>
+            </section>
+            <aside class="basket-list" v-bind:class="{ active: isVisibleCart }">
+                <h2>Корзина</h2>
+                <div class="basket-item" v-for="good in basketGoods">
+                    <img :src="good.img" :alt="good.title">
+                    <button :id="good.id" v-on:click="deleteItem(event)">&times;</button>
+                    <div class="basket-item-info">
+                        <h3>{{good.title}}</h3>
+                        <p>{{good.price}}</p>
+                    </div>
+                </div>
+                <small class="totalCart">{{totalPriceMessage}}</small>
+            </aside>
+        </main>
+    </div>
 </body>
-</html> 
+</html>
